@@ -16,7 +16,9 @@ export default class RegistrationScreen extends Component {
       email: "",
       name: "",
       password: ""
-    }
+    };
+
+    this.register = this.register.bind(this);
   }
 
 
@@ -26,12 +28,14 @@ export default class RegistrationScreen extends Component {
     const email = user[1][1];
     const pw = user[2][1];
     if (name && email && pw){
+      console.log("user ", name, email, pw);
       this.props.navigation.navigate("Home", {name});
     }
   }
 
   async register(){
-    await AsyncStorage.multiSet([[NAME, 'val1'], ['k2', 'val2']]).catch(console.log)
+    await AsyncStorage.multiSet([[NAME, this.state.name], [EMAIL, this.state.email], [PASSWORD, this.state.password]]).catch(console.log);
+    this.props.navigation.navigate("Home", {name: this.state.name});
   }
 
   render() {
@@ -64,7 +68,7 @@ export default class RegistrationScreen extends Component {
                     }}/>
         <BaseButton
           disabled={!this.state.isEmailValid || !this.state.isNameValid || !this.state.isPasswordValid}
-          onPress={()=>{this.props.navigation.navigate("Home", {name: this.state.name})}}
+          onPress={this.register}
           text="Register"/>
 
 

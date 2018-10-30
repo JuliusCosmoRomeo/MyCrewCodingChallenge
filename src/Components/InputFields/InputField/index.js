@@ -34,7 +34,6 @@ export default class InputField extends Component {
           placeholder={this.props.placeholder}
           onEndEditing={()=>{
             const isValid = this.props.validate(this.state.text);
-            console.log("is valid ",this.state.text, " ", isValid);
             this.setState({isValid});
           }}
           underlineColorAndroid="transparent"/>
