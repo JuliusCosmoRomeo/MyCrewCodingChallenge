@@ -4,6 +4,8 @@ import BaseButton from "../../Components/Buttons/BaseButton";
 import {NAME, PASSWORD, EMAIL } from "../../Constants/constants";
 import PropTypes from "prop-types";
 
+const songUri = "https://www.dropbox.com/s/zrl1jsdk29qdv5r/Pink%20Fluffy%20Unicorns%20Dancing%20on%20Rainbows%20-%20Fluffle%20Puff%20.mp3?dl=0";
+
 export default class Home extends Component {
 
   constructor(props){
@@ -11,6 +13,8 @@ export default class Home extends Component {
     this.state = {
       isPlaying: false
     };
+
+    this.player = React.createRef();
 
     this.logout = this.logout.bind(this);
     this.playSong = this.playSong.bind(this);
@@ -31,6 +35,7 @@ export default class Home extends Component {
     this.setState({
       isPlaying: !this.state.isPlaying
     })
+    //this.refs.player.
   }
 
   stopSong(){
@@ -50,6 +55,14 @@ export default class Home extends Component {
             <Image source={require("../../../assets/stopButton.png")}/>
           </TouchableOpacity>
         </View>
+        <Video source={{uri: songUri}}
+               ref={(ref) => {
+                 this.player = ref
+               }}
+               paused={!this.state.isPlaying}   //the state of the component controls if the audio is played
+               onEnd={this.stopSong}
+               onError={this.stopSong}
+               style={styles.backgroundVideo} />
         <BaseButton
           onPress={this.logout}
           text="Logout"/>
