@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
-import RegistrationScreen from "./src/Screens/RegistrationScreen";
-
+import HomeStackNavigator from "./src/Navigation/HomeStackNavigator";
+import { View } from "react-native";
 
 export default class App extends Component {
   render() {
     return (
-      <RegistrationScreen/>
+
+      <HomeStackNavigator/>
+
     );
   }
 }

@@ -1,8 +1,8 @@
 import React,{Component} from 'react';
-import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import { StyleSheet, View, } from 'react-native';
 import InputField from "../../Components/InputFields/InputField";
-import {validateEmail, validateName, validatePassword} from "../../validationUtil";
-import {GREY, PINK} from "../../colors/colors";
+import {validateEmail, validatePassword} from "../../validationUtil";
+import BaseButton from "../../Components/Buttons/BaseButton";
 
 export default class LoginScreen extends Component {
 
@@ -36,8 +36,8 @@ export default class LoginScreen extends Component {
                     }}/>
 
         <BaseButton
-          disabled={!this.state.isEmailValid || !this.state.isNameValid || !this.state.isPasswordValid}
-          onPress={()=>{console.log("button pressed")}}
+          disabled={!this.state.isEmailValid || !this.state.isPasswordValid}
+          onPress={()=>{this.props.navigation.navigate("Home")}}
           text="Login"/>
 
       </View>
@@ -50,5 +50,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     justifyContent: "center",
+    backgroundColor: "white"
   },
 });
