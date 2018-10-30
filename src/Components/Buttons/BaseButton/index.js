@@ -1,7 +1,7 @@
 import React,{Component} from 'react';
 import { StyleSheet, TouchableOpacity, Text } from 'react-native';
 import PropTypes from "prop-types";
-import {PINK} from "../../../colors/colors";
+import {PINK} from "../../../Colors/colors";
 
 export default class BaseButton extends Component {
 

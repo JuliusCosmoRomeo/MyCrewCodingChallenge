@@ -1,8 +1,9 @@
 import React,{Component} from 'react';
-import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Text, AsyncStorage } from 'react-native';
 import InputField from "../../Components/InputFields/InputField";
 import {validateEmail, validateName, validatePassword} from "../../validationUtil";
 import BaseButton from "../../Components/Buttons/BaseButton";
+import {EMAIL, NAME, PASSWORD} from "../../Constants/constants";
 
 export default class RegistrationScreen extends Component {
 
@@ -12,7 +13,25 @@ export default class RegistrationScreen extends Component {
       isNameValid: false,
       isEmailValid: false,
       isPasswordValid: false,
+      email: "",
+      name: "",
+      password: ""
     }
+  }
+
+
+  async componentDidMount(){
+    const user = await AsyncStorage.multiGet([NAME,EMAIL,PASSWORD]).catch(console.log);
+    const name = user[0][1];
+    const email = user[1][1];
+    const pw = user[2][1];
+    if (name && email && pw){
+      this.props.navigation.navigate("Home", {name});
+    }
+  }
+
+  async register(){
+    await AsyncStorage.multiSet([[NAME, 'val1'], ['k2', 'val2']]).catch(console.log)
   }
 
   render() {
@@ -23,16 +42,16 @@ export default class RegistrationScreen extends Component {
                     errorText="No valid email address"
                     validate={(email)=>{
                       const isValid = validateEmail(email);
-                      this.setState({isEmailValid: isValid});
+                      this.setState({email, isEmailValid: isValid});
                       return isValid;
                     }}/>
         <InputField label="Password"
                     placeholder="R23Lp0"
                     errorText="Password must consist of at least 6 letters or numbers"
                     password={true}
-                    validate={(pw)=>{
-                      const isValid = validatePassword(pw);
-                      this.setState({isPasswordValid: isValid});
+                    validate={(password)=>{
+                      const isValid = validatePassword(password);
+                      this.setState({password, isPasswordValid: isValid});
                       return isValid;
                     }}/>
         <InputField label="Name"
@@ -40,12 +59,12 @@ export default class RegistrationScreen extends Component {
                     errorText="Name must consist of at least 6 letters"
                     validate={(name)=>{
                       const isValid = validateName(name);
-                      this.setState({isNameValid: isValid});
+                      this.setState({name, isNameValid: isValid});
                       return isValid;
                     }}/>
         <BaseButton
           disabled={!this.state.isEmailValid || !this.state.isNameValid || !this.state.isPasswordValid}
-          onPress={()=>{this.props.navigation.navigate("Home")}}
+          onPress={()=>{this.props.navigation.navigate("Home", {name: this.state.name})}}
           text="Register"/>
 
 

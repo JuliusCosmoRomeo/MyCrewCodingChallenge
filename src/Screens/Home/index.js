@@ -1,7 +1,5 @@
 import React,{Component} from 'react';
-import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
-import InputField from "../../Components/InputFields/InputField";
-import {validateEmail, validatePassword} from "../../validationUtil";
+import { StyleSheet, View } from 'react-native';
 import BaseButton from "../../Components/Buttons/BaseButton";
 
 
@@ -10,36 +8,22 @@ export default class Home extends Component {
   constructor(props){
     super(props);
     this.state = {
-      isEmailValid: false,
-      isPasswordValid: false,
+
     }
   }
+
+  static propTypes = {
+    name: PropTypes.string.isRequired
+  };
 
   render() {
     return (
       <View style={styles.container}>
-        <InputField label="Email"
-                    placeholder="john.doe@gmail.com"
-                    errorText="No valid email address"
-                    validate={(email)=>{
-                      const isValid = validateEmail(email);
-                      this.setState({isEmailValid: isValid});
-                      return isValid;
-                    }}/>
-        <InputField label="Password"
-                    placeholder="R23Lp0"
-                    errorText="Password must consist of at least 6 letters or numbers"
-                    password={true}
-                    validate={(pw)=>{
-                      const isValid = validatePassword(pw);
-                      this.setState({isPasswordValid: isValid});
-                      return isValid;
-                    }}/>
 
+        <Text>{"Hi " + this.props.name}</Text>
         <BaseButton
-          disabled={!this.state.isEmailValid || !this.state.isNameValid || !this.state.isPasswordValid}
           onPress={()=>{console.log("button pressed")}}
-          text="Login"/>
+          text="Logout"/>
 
       </View>
     );
