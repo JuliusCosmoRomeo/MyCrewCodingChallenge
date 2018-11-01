@@ -25,10 +25,10 @@ export default class Home extends Component {
     this.logout = this.logout.bind(this);
     this.playSong = this.playSong.bind(this);
     this.stopSong = this.stopSong.bind(this);
-    animationValue.addListener(({value}) => this._currentAnimValue = value);
-    AudioPlayer.prepare(url, () => {
-
+    animationValue.addListener(({value}) => {
+      this._currentAnimValue = value
     });
+    this.prepareAudioPlayer();
   }
 
 
@@ -46,8 +46,9 @@ export default class Home extends Component {
 
     if (!this.state.isPlaying){
       AudioPlayer.play();
-      const duration = (this._currentAnimValue/width) * animationDuration;
+      const duration = (this._currentAnimValue+width/2)/width * animationDuration;
       this.runAnimation(duration);
+
     } else {
       this.pauseSong();
     }
@@ -64,8 +65,9 @@ export default class Home extends Component {
     this.setState({
       isPlaying: false,
       hasStarted: false
-    })
+    });
     AudioPlayer.stop();
+    this.prepareAudioPlayer();
   }
 
   pauseSong(){
@@ -73,6 +75,10 @@ export default class Home extends Component {
       animationValue
     ).stop();
     AudioPlayer.pause();
+  }
+
+  prepareAudioPlayer(){
+    AudioPlayer.prepare(url, ()=>console.log("prepared audio player"));
   }
 
   runAnimation(duration) {
@@ -83,7 +89,6 @@ export default class Home extends Component {
     }).start((o) => {
       if(o.finished) {
         animationValue.setValue(width/2+35);
-        console.log("finished")
         this.runAnimation(animationDuration);
       }
     });
