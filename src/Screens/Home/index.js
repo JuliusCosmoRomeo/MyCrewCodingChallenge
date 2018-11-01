@@ -59,7 +59,7 @@ export default class Home extends Component {
 
   }
 
-  stopSong(){
+  async stopSong(){
     this.pauseSong();
     animationValue.setValue(0);
     this.setState({
@@ -67,7 +67,7 @@ export default class Home extends Component {
       hasStarted: false
     });
     AudioPlayer.stop();
-    this.prepareAudioPlayer();
+    await this.prepareAudioPlayer();
   }
 
   pauseSong(){
@@ -77,8 +77,11 @@ export default class Home extends Component {
     AudioPlayer.pause();
   }
 
-  prepareAudioPlayer(){
-    AudioPlayer.prepare(url, ()=>console.log("prepared audio player"));
+  async prepareAudioPlayer(){
+    await AudioPlayer.prepare(url, ()=>console.log("prepared audio player"));
+    AudioPlayer.onEnd(() => {
+      this.stopSong().then(()=> this.playSong());
+    });
   }
 
   runAnimation(duration) {
