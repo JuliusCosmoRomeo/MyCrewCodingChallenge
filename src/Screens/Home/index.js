@@ -7,7 +7,7 @@ import AudioPlayer from 'react-native-play-audio';
 
 const { width } = Dimensions.get("window");
 
-const url = 'https://doc-04-8c-docs.googleusercontent.com/docs/securesc/tlh9qt306foelfb7i8b1c7h4cgei76mm/r5t5ap5v9lgfq1ljkok1sfn8o7en18s9/1541030400000/15894158150185779202/15894158150185779202/1YvIjT3kEoxtcE73IrRjZYCwO20jXlQZD?e=download';
+const url = 'https://ucfa2f38cb0e936753153aae8108.previews.dropboxusercontent.com/p/orig/AAObJ4PxSWmexqbtVm7mzG6iffLk7gj_Mjw-I09NHvXI0H5jJRx7w2dPYBiwetzWv-EoT1PlPskaAHOLB3Vv6uqaahkalEhcDKqT5fpDf1zQ3rFDLhw76mAHhBwqyAwyN1hZUKdrFgFyBO4_QtTqD6Feb9slDYWp5ev2ZG5jNKpDd7iAZBnfn3489NJi4c1Qs_J0cY7Qg5P3T3lTZdnALq6HSGi8kohgn8vt8cEXGFji5CY_iJg_2rmmICCfHN9iK98DyStQRoKYvm8yHOOWfdjR/p.mp3?dl=0';
 
 let animationValue = new Animated.Value(0);
 const animationDuration = 3000;
@@ -26,6 +26,9 @@ export default class Home extends Component {
     this.playSong = this.playSong.bind(this);
     this.stopSong = this.stopSong.bind(this);
     animationValue.addListener(({value}) => this._currentAnimValue = value);
+    AudioPlayer.prepare(url, () => {
+
+    });
   }
 
 
@@ -42,20 +45,7 @@ export default class Home extends Component {
   playSong(){
 
     if (!this.state.isPlaying){
-      console.log("Preparing Audio player");
-      AudioPlayer.prepare(url, () => {
-        console.log("Audio player prepared, playing now...");
-        AudioPlayer.play();
-
-        AudioPlayer.getDuration((duration) => {
-          console.log(duration);
-        });
-        setInterval(() => {
-          AudioPlayer.getCurrentTime((currentTime) => {
-            console.log(currentTime);
-          });
-        }, 1000);
-      });
+      AudioPlayer.play();
       const duration = (this._currentAnimValue/width) * animationDuration;
       this.runAnimation(duration);
     } else {
@@ -75,13 +65,14 @@ export default class Home extends Component {
       isPlaying: false,
       hasStarted: false
     })
+    AudioPlayer.stop();
   }
 
   pauseSong(){
     Animated.timing(
       animationValue
     ).stop();
-
+    AudioPlayer.pause();
   }
 
   runAnimation(duration) {
