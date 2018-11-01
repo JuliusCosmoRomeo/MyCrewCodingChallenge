@@ -7,7 +7,7 @@ import AudioPlayer from 'react-native-play-audio';
 
 const { width } = Dimensions.get("window");
 
-const url = 'blob:https://www.dropbox.com/7a26d338-0484-4fc3-8263-b91b041d13b3';
+const url = 'https://doc-04-8c-docs.googleusercontent.com/docs/securesc/tlh9qt306foelfb7i8b1c7h4cgei76mm/r5t5ap5v9lgfq1ljkok1sfn8o7en18s9/1541030400000/15894158150185779202/15894158150185779202/1YvIjT3kEoxtcE73IrRjZYCwO20jXlQZD?e=download';
 
 let animationValue = new Animated.Value(0);
 const animationDuration = 3000;
@@ -18,7 +18,8 @@ export default class Home extends Component {
   constructor(props){
     super(props);
     this.state = {
-      isPlaying: false
+      isPlaying: false,
+      hasStarted: false,
     };
 
     this.logout = this.logout.bind(this);
@@ -61,7 +62,8 @@ export default class Home extends Component {
       this.pauseSong();
     }
     this.setState({
-      isPlaying: !this.state.isPlaying
+      isPlaying: !this.state.isPlaying,
+      hasStarted: true
     })
 
   }
@@ -70,7 +72,8 @@ export default class Home extends Component {
     this.pauseSong();
     animationValue.setValue(0);
     this.setState({
-      isPlaying: false
+      isPlaying: false,
+      hasStarted: false
     })
   }
 
@@ -83,12 +86,12 @@ export default class Home extends Component {
 
   runAnimation(duration) {
     Animated.timing(animationValue, {
-      toValue: -(width/2+20),
+      toValue: -(width/2+35),
       duration,
       useNativeDriver: true,
     }).start((o) => {
       if(o.finished) {
-        animationValue.setValue(width/2+20);
+        animationValue.setValue(width/2+35);
         console.log("finished")
         this.runAnimation(animationDuration);
       }
@@ -104,15 +107,13 @@ export default class Home extends Component {
           <TouchableOpacity onPress={this.playSong}>
             <Image source={ this.state.isPlaying ? require("../../../assets/pauseButton.png") : require("../../../assets/playButton.png")}/>
           </TouchableOpacity>
-          <TouchableOpacity onPress={this.stopSong}>
-            <Image source={require("../../../assets/stopButton.png")}/>
+          <TouchableOpacity disabled={!this.state.hasStarted} onPress={this.stopSong}>
+            <Image style={!this.state.hasStarted && styles.stopButtonInactive} source={require("../../../assets/stopButton.png")}/>
           </TouchableOpacity>
 
         </View>
         <Animated.View style={styles.animationContainer}>
-          <Text>{"\u{1F984}"}</Text>
-          <Text>{"\u{1F984}"}</Text>
-          <Text>{"\u{1F984}"}</Text>
+          <Text style={styles.unicorns}>{"\u{1F984}\u{1F984}\u{1F984}"}</Text>
         </Animated.View>
         <BaseButton
           onPress={this.logout}
@@ -140,6 +141,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignSelf: "center"
   },
+  stopButtonInactive: {
+    opacity: 0.7
+  },
   logoutBtn: {
     alignSelf: "flex-end"
   },
@@ -149,6 +153,8 @@ const styles = StyleSheet.create({
     transform:[
       { translateX: animationValue }
     ]
-
+  },
+  unicorns: {
+    fontSize: 20
   }
 });
