@@ -8,8 +8,7 @@ import ReactNativeToast from "../../../native_modules/ReactNativeToast";
 
 const { width } = Dimensions.get("window");
 
-//const url = 'https://ucf274b69ef07cc854376e24f380.previews.dropboxusercontent.com/p/orig/AAMbAM5WmPN9Gay26t4h1MKrjc6ZPWvIsC05HxBclhcSvP6Q6GBFaHWT9rZRv1Nwjo2s5i3qH6nsa3QJQjZV6auJKk3JlGlWhu6Zfm0vTVynMXAPhGsM6uUQ-NovSa4YdeCWArjPQT27-mkqAIaf9iJlhnLRKdrSOYIIBojog8as2vYbqsYC16UFBthLYYme6R1wBkJWI6BfjGR0z4P_r-cew1nw--jr2htD0rIDF3x4AqX_CD0DQ5nOZVs_8Mo3ptpFNcXUOl_SBUtnxZ6gnDmP/p.mp3?dl=0';
-const url = "http://soundbible.com/mp3/Straw%20Slurp-SoundBible.com-1248566513.mp3";
+const url = "https://www.dropbox.com/s/zrl1jsdk29qdv5r/Pink%20Fluffy%20Unicorns%20Dancing%20on%20Rainbows%20-%20Fluffle%20Puff%20.mp3?dl=1";
 let animationValue = new Animated.Value(0);
 const animationDuration = 3000;
 
