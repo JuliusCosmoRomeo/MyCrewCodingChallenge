@@ -1,14 +1,15 @@
 import React,{Component} from 'react';
-import { StyleSheet, View, TouchableOpacity, AsyncStorage, Dimensions, Text, Image, Animated } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, AsyncStorage, Platform, Dimensions, Text, Image, Animated } from 'react-native';
 import BaseButton from "../../Components/Buttons/BaseButton";
 import {NAME, PASSWORD, EMAIL } from "../../Constants/constants";
 import PropTypes from "prop-types";
 import AudioPlayer from 'react-native-play-audio';
+import ReactNativeToast from "../../../native_modules/ReactNativeToast";
 
 const { width } = Dimensions.get("window");
 
-const url = 'https://ucfa2f38cb0e936753153aae8108.previews.dropboxusercontent.com/p/orig/AAObJ4PxSWmexqbtVm7mzG6iffLk7gj_Mjw-I09NHvXI0H5jJRx7w2dPYBiwetzWv-EoT1PlPskaAHOLB3Vv6uqaahkalEhcDKqT5fpDf1zQ3rFDLhw76mAHhBwqyAwyN1hZUKdrFgFyBO4_QtTqD6Feb9slDYWp5ev2ZG5jNKpDd7iAZBnfn3489NJi4c1Qs_J0cY7Qg5P3T3lTZdnALq6HSGi8kohgn8vt8cEXGFji5CY_iJg_2rmmICCfHN9iK98DyStQRoKYvm8yHOOWfdjR/p.mp3?dl=0';
-
+//const url = 'https://ucf274b69ef07cc854376e24f380.previews.dropboxusercontent.com/p/orig/AAMbAM5WmPN9Gay26t4h1MKrjc6ZPWvIsC05HxBclhcSvP6Q6GBFaHWT9rZRv1Nwjo2s5i3qH6nsa3QJQjZV6auJKk3JlGlWhu6Zfm0vTVynMXAPhGsM6uUQ-NovSa4YdeCWArjPQT27-mkqAIaf9iJlhnLRKdrSOYIIBojog8as2vYbqsYC16UFBthLYYme6R1wBkJWI6BfjGR0z4P_r-cew1nw--jr2htD0rIDF3x4AqX_CD0DQ5nOZVs_8Mo3ptpFNcXUOl_SBUtnxZ6gnDmP/p.mp3?dl=0';
+const url = "http://soundbible.com/mp3/Straw%20Slurp-SoundBible.com-1248566513.mp3";
 let animationValue = new Animated.Value(0);
 const animationDuration = 3000;
 
@@ -20,6 +21,7 @@ export default class Home extends Component {
     this.state = {
       isPlaying: false,
       hasStarted: false,
+      playerPrepared: false
     };
 
     this.logout = this.logout.bind(this);
@@ -28,7 +30,9 @@ export default class Home extends Component {
     animationValue.addListener(({value}) => {
       this._currentAnimValue = value
     });
-    this.prepareAudioPlayer();
+    this.onEnd();
+    this.prepareAudioPlayer(null);
+
   }
 
 
@@ -38,36 +42,72 @@ export default class Home extends Component {
 
 
   async logout(){
-    await AsyncStorage.multiRemove([NAME, EMAIL, PASSWORD]).catch(console.log);
-    this.props.navigation.popToTop();
+    if(this.state.isPlaying){
+      this.stopSong();
+    }
+    console.log(Object.keys(ReactNativeToast));
+    //await AsyncStorage.multiRemove([NAME, EMAIL, PASSWORD]).catch(console.log);
+    //this.props.navigation.popToTop();
+    ReactNativeToast.show("You've been logged out");
+  }
+
+  onEnd(){
+    AudioPlayer.onEnd(async () => {
+      //after song has finished playing we first stop it and then replay it on ios
+      await this.setState({
+        isPlaying: false,
+        hasStarted: false,
+        playerPrepared: false
+      });
+      this.onEnd();
+      if (Platform.OS === "ios"){
+        this.prepareAudioPlayer(this.playSong);
+      } else {
+        Animated.timing(
+          animationValue
+        ).stop();
+      }
+    });
   }
 
   playSong(){
 
-    if (!this.state.isPlaying){
-      AudioPlayer.play();
-      const duration = (this._currentAnimValue+width/2)/width * animationDuration;
-      this.runAnimation(duration);
-
+    if (!this.state.playerPrepared){
+      //start the audio player before playing the song
+      this.prepareAudioPlayer(this.playSong);
     } else {
-      this.pauseSong();
+      //we're resuming the song
+      if (!this.state.isPlaying){
+        AudioPlayer.play();
+        const duration = (this._currentAnimValue+width/2)/width * animationDuration;
+        this.runAnimation(duration);
+      } else {
+        this.pauseSong();
+      }
+      this.setState({
+        isPlaying: !this.state.isPlaying,
+        hasStarted: true
+      })
     }
-    this.setState({
-      isPlaying: !this.state.isPlaying,
-      hasStarted: true
-    })
 
   }
 
-  async stopSong(){
-    this.pauseSong();
-    animationValue.setValue(0);
-    this.setState({
-      isPlaying: false,
-      hasStarted: false
-    });
-    AudioPlayer.stop();
-    await this.prepareAudioPlayer();
+  stopSong(){
+    if (!this.state.playerPrepared){
+      this.prepareAudioPlayer(this.stopSong);
+    } else {
+      this.pauseSong();
+      animationValue.setValue(0);
+      this.setState({
+        isPlaying: false,
+        hasStarted: false
+      });
+      AudioPlayer.stop();
+      this.setState({
+        playerPrepared: false
+      });
+      this.prepareAudioPlayer(null);
+    }
   }
 
   pauseSong(){
@@ -77,14 +117,18 @@ export default class Home extends Component {
     AudioPlayer.pause();
   }
 
-  async prepareAudioPlayer(){
-    await AudioPlayer.prepare(url, ()=>console.log("prepared audio player"));
-    AudioPlayer.onEnd(() => {
-      this.stopSong().then(()=> this.playSong());
+  async prepareAudioPlayer(callback){
+    //player needs to be prepared everytime we restarted the song
+    await AudioPlayer.prepare(url, async ()=>{
+      console.log("prepared audio player");
+      await this.setState({playerPrepared: true})
+      if (callback)
+        callback();
     });
   }
 
   runAnimation(duration) {
+    //calculate how far our unicorns already progressed on screen --> animation timing depends on unicorn position
     Animated.timing(animationValue, {
       toValue: -(width/2+35),
       duration,
