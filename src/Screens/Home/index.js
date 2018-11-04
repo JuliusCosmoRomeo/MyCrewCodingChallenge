@@ -6,7 +6,7 @@ import ReactNativeToast from "../../../native_modules/ReactNativeToast";
 
 const { width } = Dimensions.get("window");
 
-const url = "https://www.dropbox.com/s/zrl1jsdk29qdv5r/Pink%20Fluffy%20Unicorns%20Dancing%20on%20Rainbows%20-%20Fluffle%20Puff%20.mp3?dl=1";
+const url = "https://dl.dropbox.com/s/zrl1jsdk29qdv5r/Pink%20Fluffy%20Unicorns%20Dancing%20on%20Rainbows%20-%20Fluffle%20Puff%20.mp3";
 let animationValue = new Animated.Value(0);
 const animationDuration = 3000;
 
