@@ -1,7 +1,3 @@
-export const NAME = "name";
-export const EMAIL = "email";
-export const PASSWORD = "password";
-
 export const NAME_ERRORS = {
   VALIDATION: "Name must consist of at least 6 letters"
 };

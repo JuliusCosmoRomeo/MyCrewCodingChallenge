@@ -1,8 +1,6 @@
 import React,{Component} from 'react';
 import { StyleSheet, View, TouchableOpacity, Platform, Dimensions, Text, Image, Animated } from 'react-native';
 import BaseButton from "../../Components/Buttons/BaseButton";
-//import {NAME, PASSWORD, EMAIL } from "../../Constants/constants";
-import PropTypes from "prop-types";
 import AudioPlayer from 'react-native-play-audio';
 import ReactNativeToast from "../../../native_modules/ReactNativeToast";
 
@@ -34,11 +32,9 @@ export default class Home extends Component {
 
   }
 
-
-
   async logout(){
     if(this.state.isPlaying){
-      this.stopSong();
+      await this.stopSong();
     }
     this.props.navigation.popToTop();
     ReactNativeToast.show("You've been logged out");

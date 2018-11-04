@@ -3,7 +3,7 @@ import { StyleSheet, View, TouchableOpacity, Text, AsyncStorage } from 'react-na
 import InputField from "../../Components/InputFields/InputField";
 import {validateEmail, validateName, validatePassword} from "../../validationUtil";
 import BaseButton from "../../Components/Buttons/BaseButton";
-import {EMAIL, EMAIL_ERRORS, NAME, NAME_ERRORS, PASSWORD, PW_ERRORS} from "../../Constants/constants";
+import {EMAIL_ERRORS, NAME_ERRORS, PW_ERRORS} from "../../Constants/constants";
 import Crypto from "crypto-js";
 
 export default class RegistrationScreen extends Component {
@@ -22,17 +22,6 @@ export default class RegistrationScreen extends Component {
     this.register = this.register.bind(this);
   }
 
-
-  /*async componentDidMount(){
-    const user = await AsyncStorage.multiGet([NAME,EMAIL,PASSWORD]).catch(console.log);
-    const name = user[0][1];
-    const email = user[1][1];
-    const pw = user[2][1];
-    if (name && email && pw){
-      console.log("user ", name, email, pw);
-      this.props.navigation.navigate("Home", {name});
-    }
-  }*/
 
   async register(){
     //check if user already exists

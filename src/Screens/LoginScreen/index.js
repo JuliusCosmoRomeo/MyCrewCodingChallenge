@@ -3,7 +3,7 @@ import { StyleSheet, View, AsyncStorage } from 'react-native';
 import InputField from "../../Components/InputFields/InputField";
 import {validateEmail, validatePassword} from "../../validationUtil";
 import BaseButton from "../../Components/Buttons/BaseButton";
-import {EMAIL_ERRORS, NAME, PASSWORD, PW_ERRORS} from "../../Constants/constants";
+import {EMAIL_ERRORS, PW_ERRORS} from "../../Constants/constants";
 import Crypto from "crypto-js";
 
 export default class LoginScreen extends Component {
@@ -30,9 +30,6 @@ export default class LoginScreen extends Component {
     if (userString){
       const user = JSON.parse(userString);
       const pwHash = Crypto.SHA256(this.state.password).toString();
-      console.log("User ", user);
-      console.log("pw ", pwHash);
-      console.log("saved pw ", user.PASSWORD);
       if (user.PASSWORD===pwHash){
         //user did it and shall pass
         this.props.navigation.navigate("Home", {name: user.NAME});
