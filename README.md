@@ -7,3 +7,5 @@ Credentials are hashed and stored locally using AsyncStorage
 Implements a native Alert Box to display custom (native looking) messages for Android and iOS users
 
 Uses [react-native-play-audio](https://github.com/ananevam/react-native-play-audio) to stream a remote audio file
+
+The wonderful sound of Fluffle Puffs *PFUDOR* + beautifully animated flying unicorns turn this app into a purely satisfying experience for eyes and ears.
