@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import { StyleSheet, View, TouchableOpacity, Platform, Dimensions, Text, Image, Animated } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Platform, Dimensions, Text, Image, Animated, ActivityIndicator } from 'react-native';
 import BaseButton from "../../Components/Buttons/BaseButton";
 import AudioPlayer from 'react-native-play-audio';
 import ReactNativeToast from "../../../native_modules/ReactNativeToast";
@@ -145,6 +145,13 @@ export default class Home extends Component {
           </TouchableOpacity>
 
         </View>
+        <ActivityIndicator animating={!this.state.playerPrepared}/>
+        {
+          !this.state.playerPrepared ?
+            <Text style={styles.preparingPlayerText}>Preparing player... this may take a while</Text>
+            :
+            <View/>
+        }
         <Animated.View style={styles.animationContainer}>
           <Text style={styles.unicorns}>{"\u{1F984}\u{1F984}\u{1F984}"}</Text>
         </Animated.View>
@@ -167,6 +174,10 @@ const styles = StyleSheet.create({
   welcome: {
     marginTop: 50,
     fontSize: 20,
+    alignSelf: "center",
+    textAlign: "center"
+  },
+  preparingPlayerText: {
     alignSelf: "center",
     textAlign: "center"
   },
