@@ -1,7 +1,7 @@
 import React,{Component} from 'react';
-import { StyleSheet, View, TouchableOpacity, AsyncStorage, Platform, Dimensions, Text, Image, Animated } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Platform, Dimensions, Text, Image, Animated } from 'react-native';
 import BaseButton from "../../Components/Buttons/BaseButton";
-import {NAME, PASSWORD, EMAIL } from "../../Constants/constants";
+//import {NAME, PASSWORD, EMAIL } from "../../Constants/constants";
 import PropTypes from "prop-types";
 import AudioPlayer from 'react-native-play-audio';
 import ReactNativeToast from "../../../native_modules/ReactNativeToast";
@@ -35,18 +35,12 @@ export default class Home extends Component {
   }
 
 
-  static propTypes = {
-    name: PropTypes.string.isRequired
-  };
-
 
   async logout(){
     if(this.state.isPlaying){
       this.stopSong();
     }
-    console.log(Object.keys(ReactNativeToast));
-    //await AsyncStorage.multiRemove([NAME, EMAIL, PASSWORD]).catch(console.log);
-    //this.props.navigation.popToTop();
+    this.props.navigation.popToTop();
     ReactNativeToast.show("You've been logged out");
   }
 
@@ -141,10 +135,11 @@ export default class Home extends Component {
   }
 
   render() {
+    const name = this.props.navigation.getParam("name", '');
     return (
       <View style={styles.container}>
 
-        <Text style={styles.welcome}>{"Welcome " + this.props.name + " to \u{1F984} paradise"}</Text>
+        <Text style={styles.welcome}>{"Welcome " + name + " to \u{1F984} paradise"}</Text>
         <View style={styles.buttonsContainer}>
           <TouchableOpacity onPress={this.playSong}>
             <Image source={ this.state.isPlaying ? require("../../../assets/pauseButton.png") : require("../../../assets/playButton.png")}/>

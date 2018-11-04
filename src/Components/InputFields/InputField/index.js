@@ -8,7 +8,6 @@ export default class InputField extends Component {
     super(props);
     this.state = {
       text: "",
-      isValid: true
     }
   }
 
@@ -17,6 +16,7 @@ export default class InputField extends Component {
     validate: PropTypes.func.isRequired,
     placeholder: PropTypes.string.isRequired,
     errorText: PropTypes.string.isRequired,
+    password: PropTypes.bool
   };
 
   render() {
@@ -30,7 +30,7 @@ export default class InputField extends Component {
             this.setState({text});
           }}
           value={this.state.text}
-          secureTextEntry={this.props.password? this.props.password : false}
+          secureTextEntry={this.props.password ? this.props.password : false}
           placeholder={this.props.placeholder}
           onEndEditing={()=>{
             const isValid = this.props.validate(this.state.text);
@@ -38,7 +38,7 @@ export default class InputField extends Component {
           }}
           underlineColorAndroid="transparent"/>
         {
-          !this.state.isValid ?
+          this.props.errorText ?
             <Text style={styles.error}>{this.props.errorText}</Text>
           :
             <View/>
